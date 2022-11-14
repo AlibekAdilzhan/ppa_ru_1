@@ -20,6 +20,7 @@ h_speed = 4
 v_speed = 0
 g = 2
 ground = 700
+can_jump = False
 
 run = True
 # Game loop.
@@ -30,8 +31,9 @@ while run:
         if event.type == pygame.QUIT:
             run = False
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_SPACE and can_jump == True:
                 v_speed = v_speed - 25
+                can_jump = False
 
     if keystate[pygame.K_RIGHT] == True:
         hero_x = hero_x + h_speed
@@ -47,6 +49,7 @@ while run:
     if hero_y >= ground:
         hero_y = ground
         v_speed = 0
+        can_jump = True
     # if hero_y > height:
     #     hero_y = -block_size
     screen.blit(snowman, (hero_x, hero_y))
