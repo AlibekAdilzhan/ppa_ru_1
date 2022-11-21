@@ -35,6 +35,7 @@ hero_x = 50
 hero_y = 50
 enemy_x = 300
 enemy_y = 50
+camera_x = 0
 h_speed = 4
 h_speed_enemy = 2
 v_speed = 0
@@ -43,7 +44,6 @@ g = 2
 ground = 700
 can_jump = False
 can_jump_enemy = False
-camera_x = 0
 
 hero_rect = pygame.Rect(hero_x, hero_y, block_size, block_size)
 enemy_rect = pygame.Rect(enemy_x, enemy_y, block_size, block_size)
@@ -72,11 +72,12 @@ while run:
         hero_x = hero_x + h_speed
     if keystate[pygame.K_LEFT] == True:
         hero_x = hero_x - h_speed
-    # if hero_x > width:
-    #     hero_x = -block_size
-    # elif hero_x < -block_size:
-    #     hero_x = width
-    if hero_x - camera_x >= width * 0.8:
+    if hero_x > width:
+        hero_x = -block_size
+    elif hero_x < -block_size:
+        hero_x = width
+
+    if hero_x - camera_x >= width * 0.7:
         camera_x = camera_x + h_speed
     elif hero_x - camera_x <= width * 0.1:
         camera_x = camera_x - h_speed
