@@ -2,6 +2,8 @@ import pygame
  
 pygame.init()
 pygame.font.init()
+pygame.mixer.init()
+
 # font object..................................
 def create_font(t,s=36,c=(255,255,0), b=False,i=False):
     font = pygame.font.SysFont("Arial", s, bold=b, italic=i)
@@ -12,6 +14,8 @@ game_start_text = create_font("Please, press 's' to start")
 
 fps = 60
 clock = pygame.time.Clock()
+
+jump_sound = pygame.mixer.Sound("sound_trampoline.wav")
 
 # game settings
 block_size = 64
@@ -75,6 +79,8 @@ run_1 = True
 # Game loop.
 while True:
     if game_mod == "start":
+        music_menu = pygame.mixer.music.load("sound_Jingle_Bells.wav")
+        pygame.mixer.music.play(-1)
         while run_1:
             screen.fill((50, 210, 190))
             for event in pygame.event.get():
@@ -87,7 +93,9 @@ while True:
             screen.blit(game_start_text, (150, 200))
             pygame.display.flip()
             clock.tick(fps)
-    elif game_mod == "game":   
+    elif game_mod == "game":  
+        music = pygame.mixer.music.load("music_1.ogg")
+        pygame.mixer.music.play(-1)
         while run:
             screen.fill((50, 210, 190))
             keystate = pygame.key.get_pressed()
@@ -99,6 +107,7 @@ while True:
                         v_speed = v_speed - 25
                         can_jump = False
                         can_jump_enemy = False
+                        pygame.mixer.Sound.play(jump_sound)
 
             hero_x_old = hero_x
             hero_y_old = hero_y
