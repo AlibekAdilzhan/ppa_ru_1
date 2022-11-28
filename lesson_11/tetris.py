@@ -1,22 +1,64 @@
 import pygame
+import time
  
 pygame.init()
  
+class Figure:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def update(self):
+        global start_time
+        if time.time() - start_time > 1:
+            self.y = self.y + bs
+            start_time = time.time()
+
 fps = 60
 clock = pygame.time.Clock()
- 
-width, height = 640, 480
+
+width, height = 352, 480
 screen = pygame.display.set_mode((width, height))
 
+# game settings
+bs = 32
+
+shape = [(0, 0), (1, 0), (1, 1,), (2, 1)]
+busy_cells = []
 run = True
+figure = Figure(3 * bs, 0)
+start_time = time.time()
 # Game loop.
 while run:
     screen.fill((0, 0, 0))
-  
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+    figure.update()
+    for t in shape:
+        pygame.draw.rect(screen, (255, 255, 255), (figure.x + t[0] * bs, figure.y + t[1] * bs, bs, bs))
 
+    for t in shape:
+        for c in busy_cells:
+            if figure.y + t[1] * bs == c[1] - bs:
+                new_busy_cells = [(figure.x + c[0] * bs, figure.y + c[1] * bs) for c in shape]
+                busy_cells.extend(new_busy_cells)
+                figure = Figure(3 * bs, 0)
+                if figure.y + t[1] * bs == 0:
+                    run = False
+                break
+    for t in shape:
+        if figure.y + t[1] * bs == height - bs:
+            new_busy_cells = [(figure.x + c[0] * bs, figure.y + c[1] * bs) for c in shape]
+            busy_cells.extend(new_busy_cells)
+            figure = Figure(3 * bs, 0)
+            break
+    for i in range(height // bs):
+        pygame.draw.line(screen, (255, 255, 255), (0, i * bs), (width, i * bs))
+    for i in range(width // bs):
+        pygame.draw.line(screen, (255, 255, 255), (i * bs, 0), (i * bs, height))
+    for c in busy_cells:
+        pygame.draw.rect(screen, (255, 255, 255), (c[0], c[1], bs, bs))
     pygame.display.flip()
     clock.tick(fps)
          
